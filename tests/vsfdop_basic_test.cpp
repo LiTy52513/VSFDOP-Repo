@@ -70,9 +70,9 @@ int main() {
     const vsfdop::VsfDopResult result =
         vsfdop::detectMatrixFractureIntersections(matrixCells, {facet}, options);
 
-    requireEqual(result.vsfCandidateCount, 54, "VSF candidate count");
-    requireEqual(result.dopRetainedCount, 49, "DOP retained count");
-    requireEqual(result.exactCheckCount, 49, "Exact-check count");
+    requireEqual(result.vsfCandidateCount, 31, "VSF candidate count");
+    requireEqual(result.dopRetainedCount, 31, "DOP retained count");
+    requireEqual(result.exactCheckCount, 31, "Exact-check count");
     requireEqual(static_cast<long long>(result.pairs.size()), 22, "True-pair count");
 
     return 0;

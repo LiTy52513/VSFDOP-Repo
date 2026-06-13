@@ -59,34 +59,18 @@ struct Dop14 {
         }
     }
 
-    static Dop14 fromTriangle(const Triangle& triangle) {
+    static Dop14 fromVertices(const std::vector<Vec3>& vertices) {
         Dop14 dop;
-        dop.addPoint(triangle.a);
-        dop.addPoint(triangle.b);
-        dop.addPoint(triangle.c);
+        for (const Vec3& vertex : vertices) {
+            dop.addPoint(vertex);
+        }
         return dop;
     }
 
-    bool overlaps(const AABB& box, double epsilon) const {
-        const std::array<Vec3, 8> corners = {
-            Vec3{box.min.x, box.min.y, box.min.z},
-            Vec3{box.min.x, box.min.y, box.max.z},
-            Vec3{box.min.x, box.max.y, box.min.z},
-            Vec3{box.min.x, box.max.y, box.max.z},
-            Vec3{box.max.x, box.min.y, box.min.z},
-            Vec3{box.max.x, box.min.y, box.max.z},
-            Vec3{box.max.x, box.max.y, box.min.z},
-            Vec3{box.max.x, box.max.y, box.max.z}};
-
+    bool overlaps(const Dop14& other, double epsilon) const {
         for (int axis = 0; axis < kDopDirectionCount; ++axis) {
-            double boxMin = std::numeric_limits<double>::infinity();
-            double boxMax = -std::numeric_limits<double>::infinity();
-            for (const Vec3& corner : corners) {
-                const double value = projection14(corner, axis);
-                boxMin = std::min(boxMin, value);
-                boxMax = std::max(boxMax, value);
-            }
-            if (maxValues[axis] < boxMin - epsilon || minValues[axis] > boxMax + epsilon) {
+            if (maxValues[axis] < other.minValues[axis] - epsilon ||
+                minValues[axis] > other.maxValues[axis] + epsilon) {
                 return false;
             }
         }
@@ -543,6 +527,15 @@ std::vector<MatrixCell> prepareCells(const std::vector<MatrixCell>& inputCells) 
     return cells;
 }
 
+std::vector<Dop14> buildCellDops(const std::vector<MatrixCell>& cells) {
+    std::vector<Dop14> cellDops;
+    cellDops.reserve(cells.size());
+    for (const MatrixCell& cell : cells) {
+        cellDops.push_back(Dop14::fromVertices(cell.vertices));
+    }
+    return cellDops;
+}
+
 } // namespace
 
 VsfDopResult detectMatrixFractureIntersections(
@@ -562,30 +555,43 @@ VsfDopResult detectMatrixFractureIntersections(
     }
 
     const std::vector<MatrixCell> cells = prepareCells(matrixCells);
+    const std::vector<Dop14> cellDops = buildCellDops(cells);
     VoxelGrid grid;
     grid.build(cells, options);
 
     std::set<std::pair<int, int>> uniquePairs;
 
     for (const FractureFacet& facet : fractureFacets) {
-        for (const Triangle& triangle : triangulateFacet(facet)) {
-            const std::vector<std::size_t> vsfCandidates = grid.queryTriangle(triangle);
-            result.vsfCandidateCount += static_cast<long long>(vsfCandidates.size());
+        const std::vector<Triangle> facetTriangles = triangulateFacet(facet);
+        std::vector<std::size_t> facetCandidates;
+        for (const Triangle& triangle : facetTriangles) {
+            const std::vector<std::size_t> triangleCandidates = grid.queryTriangle(triangle);
+            facetCandidates.insert(
+                facetCandidates.end(),
+                triangleCandidates.begin(),
+                triangleCandidates.end());
+        }
 
-            const Dop14 dop = Dop14::fromTriangle(triangle);
-            for (const std::size_t cellIndex : vsfCandidates) {
-                const MatrixCell& cell = cells[cellIndex];
-                if (!dop.overlaps(cell.bounds, options.epsilon)) {
-                    continue;
-                }
+        std::sort(facetCandidates.begin(), facetCandidates.end());
+        facetCandidates.erase(std::unique(facetCandidates.begin(), facetCandidates.end()), facetCandidates.end());
+        result.vsfCandidateCount += static_cast<long long>(facetCandidates.size());
 
-                ++result.dopRetainedCount;
-                ++result.exactCheckCount;
+        const Dop14 facetDop = Dop14::fromVertices(facet.vertices);
+        for (const std::size_t cellIndex : facetCandidates) {
+            const MatrixCell& cell = cells[cellIndex];
+            if (!facetDop.overlaps(cellDops[cellIndex], options.epsilon)) {
+                continue;
+            }
+
+            ++result.dopRetainedCount;
+            ++result.exactCheckCount;
+            for (const Triangle& triangle : facetTriangles) {
                 if (triangleIntersectsCell(triangle, cell, options.epsilon)) {
                     const std::pair<int, int> key{cell.id, facet.id};
                     if (uniquePairs.insert(key).second) {
                         result.pairs.push_back(IntersectionPair{cell.id, facet.id});
                     }
+                    break;
                 }
             }
         }
@@ -597,4 +603,3 @@ VsfDopResult detectMatrixFractureIntersections(
 }
 
 } // namespace vsfdop
-
