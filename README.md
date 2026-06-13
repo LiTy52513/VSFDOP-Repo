@@ -4,7 +4,7 @@ This repository provides a compact C++17 implementation of the voxelised surface
 
 The code package is intentionally limited to the geometric preprocessing stage. It does not include EDFM solvers, flow equations, well models, plotting scripts, manuscript benchmark runners, or visualization export utilities.
 
-## Journal Code-Package Status
+## Code-Package Status
 
 The repository is organised as a minimal open-source code package for manuscript review and reuse:
 
@@ -98,7 +98,7 @@ For manuscript submission, cite the public repository release rather than a movi
 1. Push this repository to GitHub.
 2. Replace placeholder URLs in `CITATION.cff` and `CODE_AVAILABILITY.md`.
 3. Create a tagged release, for example `v0.1.0`.
-4. Archive the release with Zenodo if a DOI is required by the target journal.
+4. Archive the release with Zenodo if a DOI is needed for citation or reproducibility.
 
 ## License
 
