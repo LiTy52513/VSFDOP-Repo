@@ -1,0 +1,69 @@
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Visual Studio / C++
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+Debug/
+Release/
+x64/
+x86/
+build/
+out/
+bin/
+obj/
+*.obj
+*.pch
+*.pdb
+*.ilk
+*.idb
+*.ipdb
+*.iobj
+*.lib
+*.dll
+*.exe
+*.log
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Data and generated artifacts
+*.tmp
+*.temp
+*.bak
+*.backup
+*.cache
+*.zip
+*.7z
+
+# Office document temporary files
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+

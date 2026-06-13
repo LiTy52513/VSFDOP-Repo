@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use VSF-DOP in academic work, please cite the associated manuscript and this software release."
+title: "VSF-DOP: voxelised surface footprint and discrete orientation polytope matrix-fracture intersection detection"
+version: "0.1.0"
+date-released: "2026-06-13"
+license: MIT
+authors:
+  - family-names: "Jiao"
+    given-names: "Kaituo"
+repository-code: "https://github.com/LiTy52513/VSFDOP-Repo"
+abstract: "A compact C++17 implementation of the VSF-DOP method for three-dimensional matrix-fracture intersection detection in non-matching grids."
