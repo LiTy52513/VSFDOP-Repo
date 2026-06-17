@@ -2,11 +2,11 @@
 
 This repository provides a compact C++17 implementation of the voxelised surface footprint and discrete orientation polytope (VSF-DOP) method for three-dimensional matrix-fracture intersection detection in non-matching grids.
 
-The code package is intentionally limited to the geometric preprocessing stage. It does not include EDFM solvers, flow equations, well models, plotting scripts, manuscript benchmark runners, or visualization export utilities.
+The code package is intentionally limited to the geometric preprocessing stage. It does not include EDFM solvers, flow equations, well models, plotting scripts, benchmark runners, or visualization export utilities.
 
 ## Code-Package Status
 
-The repository is organised as a minimal open-source code package for manuscript review and reuse:
+The repository is organised as a minimal open-source code package for reproducible research and reuse:
 
 - C++17 library with a stable public API.
 - CMake build system with no external dependencies.
@@ -14,8 +14,6 @@ The repository is organised as a minimal open-source code package for manuscript
 - CTest verification target.
 - MIT license.
 - Citation metadata and code/data availability notes.
-
-Before submission, replace the placeholder repository URLs in `CITATION.cff` and `CODE_AVAILABILITY.md` with the final public GitHub URL.
 
 ## Contents
 
@@ -87,18 +85,16 @@ The input matrix cells are convex polyhedra described by vertices and face conne
 
 ## Scope
 
-This code package is designed for manuscript reproducibility and method inspection. It contains only the core 3D VSF-DOP functionality and a minimal executable example.
+This code package is designed for reproducible method inspection. It contains only the core 3D VSF-DOP functionality and a minimal executable example.
 
 ## Reproducibility Notes
 
-The example is intentionally small and self-contained so that reviewers can build and run it without external mesh files. It demonstrates the full VSF-DOP pipeline but is not intended to reproduce the large benchmark figures in the manuscript.
+The example is intentionally small and self-contained so that readers can build and run it without external mesh files. It demonstrates the full VSF-DOP pipeline but is not intended to reproduce the large benchmark figures in the associated study.
 
-For manuscript submission, cite the public repository release rather than a moving branch. A recommended workflow is:
+For scholarly use, cite a versioned repository release rather than a moving branch. A recommended workflow is:
 
-1. Push this repository to GitHub.
-2. Replace placeholder URLs in `CITATION.cff` and `CODE_AVAILABILITY.md`.
-3. Create a tagged release, for example `v0.1.0`.
-4. Archive the release with Zenodo if a DOI is needed for citation or reproducibility.
+1. Use a tagged release, for example `v0.1.0`.
+2. Archive the release with Zenodo if a DOI is needed for citation or reproducibility.
 
 ## License
 
